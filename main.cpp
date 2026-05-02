@@ -393,6 +393,148 @@ void garden()
     }
 }
 
+/// ############################################################## Metro Flyover  ###############################################################
+void flyOver()
+{
+    ///Pillar
+    if (isDay)
+        glColor3f(0.55f, 0.55f, 0.55f);
+    else
+        glColor3f(0.30f, 0.30f, 0.30f);
+
+    glBegin(GL_QUADS);
+    for(int x = 50; x<1000; x+=100)
+    {
+        glVertex2f(x,   205);
+        glVertex2f(x+15,205);
+        glVertex2f(x+15,275);
+        glVertex2f(x,   275);
+    }
+    glEnd();
+
+    /// Pillar upper box
+    if (isDay)
+        glColor3f(0.55f, 0.55f, 0.55f);
+    else
+        glColor3f(0.30f, 0.30f, 0.30f);
+
+    glBegin(GL_TRIANGLES);
+    for(int x = 40; x<1000; x+=100)
+    {
+        glVertex2f(x,     275);
+        glVertex2f(x+35,  275);
+        glVertex2f(x+15,255);
+    }
+    glEnd();
+
+    if(isDay)
+        glColor3f(0.80f, 0.80f, 0.80f);
+    else
+        glColor3f(.4,.4,.4);
+
+    glLineWidth(5);
+    glBegin(GL_LINES);
+    glVertex2f(0,   275);
+    glVertex2f(1000,275);
+    glEnd();
+
+    ///Bridge body
+    if (isDay)
+        glColor3f(0.55f, 0.55f, 0.55f);
+    else
+        glColor3f(0.30f, 0.30f, 0.30f);
+
+    glBegin(GL_QUADS);
+    glVertex2f(0,   277);
+    glVertex2f(1000,277);
+    glVertex2f(1000,288);
+    glVertex2f(0,   288);
+    glEnd();
+}
+
+/// ##############################################################  Road Side Wall  ###############################################################
+void roadSideWall()
+{
+    if (isDay)
+        glColor3f(0.839f, 0.443f, 0.235f);
+    else
+        glColor3f(0.42f, 0.22f, 0.13f);
+
+    glBegin(GL_QUADS);
+    glVertex2f(0,   170);
+    glVertex2f(1000,170);
+    glVertex2f(1000,190);
+    glVertex2f(0,   190);
+    glEnd();
+
+    //Breaks Line
+    if (isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.5f, 0.5f, 0.5f);
+
+    glLineWidth(1);
+    glBegin(GL_LINES);
+
+    glVertex2f(0,   170);
+    glVertex2f(1000,170);
+
+    glVertex2f(0,   175);
+    glVertex2f(1000,175);
+
+    glVertex2f(0,   180);
+    glVertex2f(1000,180);
+
+    glVertex2f(0,   185);
+    glVertex2f(1000,185);
+
+    glVertex2f(0,   190);
+    glVertex2f(1000,190);
+
+    for(int x = 10; x<1000; x+=20)
+    {
+        glVertex2f(x,170);
+        glVertex2f(x,175);
+
+        glVertex2f(x+10,175);
+        glVertex2f(x+10,180);
+
+        glVertex2f(x,180);
+        glVertex2f(x,185);
+
+        glVertex2f(x+10,185);
+        glVertex2f(x+10,190);
+    }
+
+    glEnd();
+
+    //Upper 2 lines
+    if (isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.5f, 0.5f, 0.5f);
+
+    glLineWidth(2);
+    glBegin(GL_LINES);
+
+    glVertex2f(0,   200);
+    glVertex2f(1000,200);
+
+    glVertex2f(0,   205);
+    glVertex2f(1000,205);
+
+    for(int i = 0; i< 1000; i+=45)
+    {
+        glLineWidth(1);
+        glVertex2f(i, 190);
+        glVertex2f(i, 205);
+
+        glVertex2f(i+5, 190);
+        glVertex2f(i+5, 205);
+    }
+    glEnd();
+
+}
 /// ##############################################################  SAKIB DISPLAY  ###############################################################
 void SAKIB()
 {
@@ -445,6 +587,8 @@ void SAKIB()
     V_cloud4();
 
     garden();
+    flyOver();
+    roadSideWall();
 
 }
 
@@ -480,13 +624,7 @@ int main(int argc, char** argv)
     // 2. MAIN CITY CONTROLS
     // ==========================================
     cout<<"********** >>> Main City Specifics <<< **********"<<endl;
-    cout<<"Press key_up / key_down    : Train speed (Day/Night)"<<endl;
-    cout<<"Press key_left / key_right : Sun speed (Day)/Moon speed (Night)"<<endl;
-    cout<<"Press Page Up / Page Down  : Cargo Truck speed (Day/Night)"<<endl<<endl;
-    cout<<"Mouse Left Click           : Stop/Start Train (Day) / Moon (Night)"<<endl;
-    cout<<"Mouse Right Click          : Stop/Start Sun/Moon"<<endl;
-    cout<<"Mouse Middle Click          : Stop/Start Truck (Day/Night)"<<endl;
-    cout<<"Press SPACE                : Stop Everything"<<endl;
+    cout<<"Press D / N    : (Day/Night)"<<endl;
 
     // --- Window Initialization ---
     glutInit(&argc, argv);
