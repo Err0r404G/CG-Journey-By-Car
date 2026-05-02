@@ -4,6 +4,7 @@
 #include<math.h>
 using namespace std;
 
+<<<<<<< HEAD
 bool scenarioSAKIB = true;
 
 
@@ -13,6 +14,18 @@ bool scenarioSAKIB = true;
 bool isDay = true;
 
 /// #############  Circle  #############
+=======
+
+/// **************************************************************************************************************************************************
+/// ******************************************************** >>> SAKIB SADMAN<<< ************************************************************************
+/// **************************************************************************************************************************************************
+
+bool isDay = true;
+
+
+/// #############  Circle  #############
+
+>>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
 void circle(float centerX, float centerY, float radius)
 {
     glBegin(GL_POLYGON);
@@ -28,6 +41,10 @@ void circle(float centerX, float centerY, float radius)
     glEnd();
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
 void halfCircle(float centerX, float centerY, float radius)
 {
     glBegin(GL_POLYGON);
@@ -44,6 +61,10 @@ void halfCircle(float centerX, float centerY, float radius)
 }
 
 /// #############  Sun  #############
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
 float moveSun = 0.0f;
 float sunSpeed =0.3f;
 float savedSunSpeed = 0.0f;
@@ -78,6 +99,10 @@ void updateSun(int value)
 }
 
 /// ############# Moon #############
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
 float moveMoon = 0;
 float moonSpeed =0.3f;
 float savedMoonSpeed = 0.0f;
@@ -114,6 +139,7 @@ void updateMoon(int value)
     glutTimerFunc(16, updateMoon, 0);
 }
 
+<<<<<<< HEAD
 /// #############  SKY  #############
 void sky()
 {
@@ -404,11 +430,43 @@ int main(int argc, char** argv)
 {
 
 
+=======
+
+
+
+
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
+
+    // Background color based on day/night
+    if(isDay)
+        glClearColor(0.5, 0.8, 1.0, 1.0); // Sky blue
+    else
+        glClearColor(0.05, 0.05, 0.2, 1.0); // Night
+
+    sun();
+    moon();
+
+    glutSwapBuffers();
+}
+void setup()
+{
+    glClearColor(1,0,0,1);
+
+
+}
+
+
+int main(int argc, char** argv) {
+
+>>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
     // --- Window Initialization ---
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_MULTISAMPLE);
     glutInitWindowSize(1000, 700);
     glutInitWindowPosition(200, 50);
+<<<<<<< HEAD
     glutCreateWindow("Going Through Places - A Journey By Car");
 
     // --- Graphics & Smoothing Setup ---
@@ -464,5 +522,13 @@ int main(int argc, char** argv)
 
     glutMainLoop();
 
+=======
+    glutCreateWindow(" A Journey By Car ");
+
+
+    glutDisplayFunc(display);
+
+    glutMainLoop();
+>>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
     return 0;
 }
