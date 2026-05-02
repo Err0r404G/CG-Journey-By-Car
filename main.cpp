@@ -535,6 +535,173 @@ void roadSideWall()
     glEnd();
 
 }
+
+/// ##############################################################  Road  ###############################################################
+void road()
+{
+    if (isDay)
+        glColor3f(.37f, .37f, .37f);
+    else
+        glColor3f(0.15f, 0.15f, 0.15f);
+
+    //Base Gray Color
+    glBegin(GL_QUADS);
+    glVertex2f(0,   0);
+    glVertex2f(1000,0);
+    glVertex2f(1000,40);
+    glVertex2f(0,   40);
+    glEnd();
+
+    //Base white line
+    if (isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.6f, 0.6f, 0.6f);
+
+    glLineWidth(10);
+    glBegin(GL_LINES);
+    glVertex2f(0,   40);
+    glVertex2f(1000,40);
+    glEnd();
+
+    //Main Road
+    glBegin(GL_QUADS);
+
+    if(isDay)
+        glColor3f(0.15f, 0.15f, 0.15f);
+    else
+        glColor3f(0,0,0);
+
+    glVertex2f(0,   160);
+    glVertex2f(1000,160);
+    glVertex2f(1000,40);
+    glVertex2f(0,   40);
+    glEnd();
+
+    //Upper white line of the road
+    if (isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.6f, 0.6f, 0.6f);
+
+    glLineWidth(3);
+    glBegin(GL_LINES);
+    glVertex2f(0,   160);
+    glVertex2f(1000,160);
+    glEnd();
+
+    //Upper gray color
+    if (isDay)
+        glColor3f(0.51f, 0.51f, 0.51f);
+    else
+        glColor3f(0.25f, 0.25f, 0.25f);
+
+    glBegin(GL_QUADS);
+    glVertex2f(0,   160);
+    glVertex2f(1000,160);
+    glVertex2f(1000,173);
+    glVertex2f(0,   173);
+    glEnd();
+
+    //Road dash line
+    if (isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.6f, 0.6f, 0.6f);
+
+    glLineWidth(3);
+    glBegin(GL_LINES);
+    for(int x = 0; x<1000; x+=60)
+    {
+        glVertex2f(x,   102);
+        glVertex2f(x+30,102);
+    }
+    glEnd();
+}
+
+/// ####################################################################### Building ###########################################################
+
+void building()
+{
+    /// 1st Building
+    if(isDay)
+        glColor3f(0.92f, 0.92f, 0.92f);
+    else
+        glColor3f(0.55f, 0.55f, 0.55f);
+
+    // body
+    glBegin(GL_QUADS);
+    glVertex2f(10,  200);
+    glVertex2f(100, 200);
+    glVertex2f(100, 525);
+    glVertex2f(10,  525);
+
+    if(isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.6f, 0.6f, 0.6f);
+
+    // Top
+    glVertex2f(6,   525);
+    glVertex2f(104, 525);
+    glVertex2f(104, 535);
+    glVertex2f(6,   535);
+    glEnd();
+
+    // window
+    glBegin(GL_QUADS);
+    for(int x = 18; x<80; x+=27 )
+    {
+        for(int y = 500; y>200; y-=60)
+        {
+            if(isDay)
+                glColor3f(1,1,1);
+            else
+                glColor3f(0.15f, 0.07f, 0.03f);
+
+            glVertex2f(x-2,  y+7);
+            glVertex2f(x+22, y+7);
+            glVertex2f(x+22, y-20);
+            glVertex2f(x-2,  y-20);
+
+            if(isDay)
+                glColor3f(0.52f, 0.78f, 0.96f);
+            else
+                glColor3f(1.0f, 1.0f, 0.5f);
+
+            glVertex2f(x,  y+5);
+            glVertex2f(x+20, y+5);
+            glVertex2f(x+20, y-20);
+            glVertex2f(x,  y-20);
+        }
+    }
+
+    glEnd();
+// Window white border
+      if(isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.6f, 0.6f, 0.6f);
+
+    glBegin(GL_QUADS);
+    for(int y = 480; y > 200; y -= 60 )
+    {
+        glVertex2f(5,   y   );
+        glVertex2f(105, y   );
+        glVertex2f(105, y-15);
+        glVertex2f(5,   y-15);
+    }
+    glEnd();
+}
+
+
+
+
+
+
+
+
+
 /// ##############################################################  SAKIB DISPLAY  ###############################################################
 void SAKIB()
 {
@@ -589,6 +756,10 @@ void SAKIB()
     garden();
     flyOver();
     roadSideWall();
+    road();
+
+
+    building();
 
 }
 
