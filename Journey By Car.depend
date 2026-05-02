@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1777585152 source:c:\users\sakib sadman\desktop\computer graphics\journey by car\main.cpp
+1777714898 source:c:\users\sakib sadman\desktop\computer graphics\journey by car\main.cpp
 	<GL/gl.h>
 	<GL/glut.h>
 	<iostream>
