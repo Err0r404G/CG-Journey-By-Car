@@ -1,16 +1,15 @@
 # depslib dependency file v1.0
-<<<<<<< HEAD
-1777714898 source:c:\users\sakib sadman\desktop\computer graphics\journey by car\main.cpp
+2627764882768 <<<<<<< HEAD
+
+1777717125 source:c:\users\sakib sadman\desktop\computer graphics\journey by car\main.cpp
 	<GL/gl.h>
 	<GL/glut.h>
 	<iostream>
 	<math.h>
-=======
-1743445502 source:c:\users\sakib sadman\desktop\computer graphics\journey by car\main.cpp
-	<GLUT/glut.h>
-	<GL/glut.h>
-	<stdlib.h>
->>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
+
+1777714898 
+
+1738705850 cfefd661412edf0ece957fde93eff38783730
 
 1426328128 c:\program files\codeblocks\mingw\x86_64-w64-mingw32\include\gl\glut.h
 	"freeglut_std.h"
@@ -950,9 +949,10 @@
 1738705850 c:\program files\codeblocks\mingw\x86_64-w64-mingw32\include\gl\glu.h
 	<GL/gl.h>
 
-<<<<<<< HEAD
+1738705850 D
+
 1738705850 c:\program files\codeblocks\mingw\x86_64-w64-mingw32\include\math.h
 	<crtdefs.h>
 
-=======
->>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
+1738705850 >
+

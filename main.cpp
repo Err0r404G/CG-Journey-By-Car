@@ -4,7 +4,6 @@
 #include<math.h>
 using namespace std;
 
-<<<<<<< HEAD
 bool scenarioSAKIB = true;
 
 
@@ -14,18 +13,6 @@ bool scenarioSAKIB = true;
 bool isDay = true;
 
 /// #############  Circle  #############
-=======
-
-/// **************************************************************************************************************************************************
-/// ******************************************************** >>> SAKIB SADMAN<<< ************************************************************************
-/// **************************************************************************************************************************************************
-
-bool isDay = true;
-
-
-/// #############  Circle  #############
-
->>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
 void circle(float centerX, float centerY, float radius)
 {
     glBegin(GL_POLYGON);
@@ -41,10 +28,6 @@ void circle(float centerX, float centerY, float radius)
     glEnd();
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
 void halfCircle(float centerX, float centerY, float radius)
 {
     glBegin(GL_POLYGON);
@@ -61,10 +44,6 @@ void halfCircle(float centerX, float centerY, float radius)
 }
 
 /// #############  Sun  #############
-<<<<<<< HEAD
-=======
-
->>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
 float moveSun = 0.0f;
 float sunSpeed =0.3f;
 float savedSunSpeed = 0.0f;
@@ -99,10 +78,6 @@ void updateSun(int value)
 }
 
 /// ############# Moon #############
-<<<<<<< HEAD
-=======
-
->>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
 float moveMoon = 0;
 float moonSpeed =0.3f;
 float savedMoonSpeed = 0.0f;
@@ -139,7 +114,6 @@ void updateMoon(int value)
     glutTimerFunc(16, updateMoon, 0);
 }
 
-<<<<<<< HEAD
 /// #############  SKY  #############
 void sky()
 {
@@ -361,8 +335,65 @@ void V_updateCloud4(int value)
     glutTimerFunc(16, V_updateCloud4, 0);
 }
 
+/// ##############################################################  Garden  ###############################################################
+void garden()
+{
+    //Base
+    if (isDay)
+        glColor3f(0.0f, 0.5f, 0.0f);
+    else
+        glColor3f(0.1f, 0.3f, 0.1f);
 
+    glBegin(GL_QUADS);
+    glVertex2f(0,180);
+    glVertex2f(1000,180);
+    glVertex2f(1000,200);
+    glVertex2f(0,200);
+    glEnd();
+    /// Triangle Tree
+    int shift = 70;
 
+    for(int i = 0; i< 67; i++)
+    {
+        glBegin(GL_QUADS);
+        glColor3f(0.702,0.333,0.224);
+        glVertex2f(15 + shift * i,205);
+        glVertex2f(25 + shift * i,205);
+        glVertex2f(25 + shift * i,220);
+        glVertex2f(15 + shift * i,220);
+        glEnd();
+
+        glBegin(GL_TRIANGLES);
+        glColor3f(0,0.32,0.004);
+
+        glVertex2f(0  + shift * i,220);
+        glVertex2f(40 + shift * i,220);
+        glVertex2f(20 + shift * i,230);
+
+        glVertex2f(10  + shift * i,225);
+        glVertex2f(30 + shift * i,225);
+        glVertex2f(20 + shift * i,235);
+
+        glVertex2f(10  + shift * i,230);
+        glVertex2f(30 + shift * i,230);
+        glVertex2f(20 + shift * i,240);
+
+        glEnd();
+
+        /// Cloud shape tree
+        if (isDay)
+            glColor3f(0.0f, 0.5f, 0.0f);
+        else
+            glColor3f(0.1f, 0.3f, 0.1f);
+
+        for(int i = 0; i<1000; i+=50)
+        {
+            halfCircle(i+20,190,25);
+        }
+    }
+}
+
+/// ##############################################################  SAKIB DISPLAY  ###############################################################
 void SAKIB()
 {
     glDisable(GL_LIGHTING);
@@ -412,61 +443,56 @@ void SAKIB()
     V_cloud2();
     V_cloud3();
     V_cloud4();
+
+    garden();
+
 }
 
-/// ##############################################################  Display  ###############################################################
+
+/// ##############################################################  CONTROL  ###############################################################
+
+void selectKeyboard(unsigned char key, int x, int y)
+{
+    if (key == 'd' || key == 'D')
+    {
+        isDay = true;
+        glutPostRedisplay();
+    }
+
+    if(key == 'n' || key == 'N')
+    {
+        isDay = false;
+        glutPostRedisplay();
+    }
+}
+
 void display()
 {
     if(scenarioSAKIB) SAKIB();
 
     glutSwapBuffers();
 }
-
-
-
-
-
 int main(int argc, char** argv)
 {
 
 
-=======
+    // ==========================================
+    // 2. MAIN CITY CONTROLS
+    // ==========================================
+    cout<<"********** >>> Main City Specifics <<< **********"<<endl;
+    cout<<"Press key_up / key_down    : Train speed (Day/Night)"<<endl;
+    cout<<"Press key_left / key_right : Sun speed (Day)/Moon speed (Night)"<<endl;
+    cout<<"Press Page Up / Page Down  : Cargo Truck speed (Day/Night)"<<endl<<endl;
+    cout<<"Mouse Left Click           : Stop/Start Train (Day) / Moon (Night)"<<endl;
+    cout<<"Mouse Right Click          : Stop/Start Sun/Moon"<<endl;
+    cout<<"Mouse Middle Click          : Stop/Start Truck (Day/Night)"<<endl;
+    cout<<"Press SPACE                : Stop Everything"<<endl;
 
-
-
-
-void display() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glLoadIdentity();
-
-    // Background color based on day/night
-    if(isDay)
-        glClearColor(0.5, 0.8, 1.0, 1.0); // Sky blue
-    else
-        glClearColor(0.05, 0.05, 0.2, 1.0); // Night
-
-    sun();
-    moon();
-
-    glutSwapBuffers();
-}
-void setup()
-{
-    glClearColor(1,0,0,1);
-
-
-}
-
-
-int main(int argc, char** argv) {
-
->>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
     // --- Window Initialization ---
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_MULTISAMPLE);
     glutInitWindowSize(1000, 700);
     glutInitWindowPosition(200, 50);
-<<<<<<< HEAD
     glutCreateWindow("Going Through Places - A Journey By Car");
 
     // --- Graphics & Smoothing Setup ---
@@ -518,17 +544,12 @@ int main(int argc, char** argv) {
 
 
     // Input Callbacks
+    glutKeyboardFunc(selectKeyboard);
 
 
-    glutMainLoop();
-
-=======
-    glutCreateWindow(" A Journey By Car ");
-
-
-    glutDisplayFunc(display);
 
     glutMainLoop();
->>>>>>> 4d0cfefd661412edf0ece957fde93eff38783730
+
     return 0;
 }
+
