@@ -393,7 +393,190 @@ void garden()
     }
 }
 
-/// ############################################################## Metro Flyover  ###############################################################
+/// ##############################################################  Train  ###############################################################
+float moveTrain = 0.0f;
+float trainSpeed =1.0f;
+float savedTrainSpeed = 0.0f;
+bool trainPaused = false;
+
+void train()
+{
+    glPushMatrix();
+    glTranslatef(moveTrain, 0.0f, 0.0f);
+
+    // Main body
+    if (isDay)
+        glColor3f(0.70f, 0.20f, 0.20f);
+    else
+        glColor3f(0.50f, 0.18f, 0.18f);
+
+    glBegin(GL_POLYGON);
+    glVertex2f(300.0f, 290.0f);
+    glVertex2f(720.0f, 290.0f);
+    glVertex2f(720.0f, 335.0f);
+    glVertex2f(680.0f, 355.0f);
+    glVertex2f(320.0f, 355.0f);
+    glVertex2f(300.0f, 345.0f);
+    glEnd();
+
+    //Top stripe above windows
+    if (isDay)
+        glColor3f(0.20f, 0.70f, 0.18f);
+    else
+        glColor3f(0.15f, 0.35f, 0.15f);
+    glBegin(GL_QUADS);
+    glVertex2f(310.0f, 340.0f);
+    glVertex2f(690.0f, 340.0f);
+    glVertex2f(690.0f, 345.0f);
+    glVertex2f(310.0f, 345.0f);
+    glEnd();
+
+    // Outline for top stripe
+    glColor3f(0.05f, 0.05f, 0.05f);
+    glLineWidth(2.0f);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(310.0f, 340.0f);
+    glVertex2f(690.0f, 340.0f);
+    glVertex2f(690.0f, 345.0f);
+    glVertex2f(310.0f, 345.0f);
+    glEnd();
+
+    // === Bottom stripe below windows ===
+    if (isDay)
+    {
+        glColor3f(0.95f, 0.12f, 0.18f);
+    }
+    else
+    {
+        glColor3f(0.55f, 0.15f, 0.15f);
+        glBegin(GL_QUADS);
+        glVertex2f(310.0f, 293.5f);
+        glVertex2f(700.0f, 293.5f);
+        glVertex2f(700.0f, 298.5f);
+        glVertex2f(310.0f, 298.5f);
+        glEnd();
+    }
+
+    // Outline for bottom stripe
+    glColor3f(0.05f, 0.05f, 0.05f);
+    glLineWidth(2.0f);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(310.0f, 293.5f);
+    glVertex2f(700.0f, 293.5f);
+    glVertex2f(700.0f, 298.5f);
+    glVertex2f(310.0f, 298.5f);
+    glEnd();
+
+    // === Window row ===
+    float wx = 340.0f;
+    for (int i = 0; i < 6; ++i)
+    {
+        // window fill
+        if (isDay)
+            glColor3f(0.92f, 0.98f, 1.0f);
+        else
+            glColor3f(0.95f, 0.94f, 0.65f);
+
+        glBegin(GL_QUADS);
+        glVertex2f(wx, 305.0f);
+        glVertex2f(wx + 52.0f, 305.0f);
+        glVertex2f(wx + 52.0f, 333.0f);
+        glVertex2f(wx, 333.0f);
+        glEnd();
+
+        // window frame
+        glColor3f(0.06f, 0.06f, 0.06f);
+        glLineWidth(4.0f);
+        glBegin(GL_LINE_LOOP);
+        glVertex2f(wx, 305.0f);
+        glVertex2f(wx + 52.0f, 305.0f);
+        glVertex2f(wx + 52.0f, 333.0f);
+        glVertex2f(wx, 333.0f);
+        glEnd();
+
+        wx += 60.0f;
+    }
+
+    //   cabin
+    if (isDay)
+        glColor3f(0.38f, 0.84f, 1.0f);
+    else
+        glColor3f(0.18f, 0.64f, 0.80f);
+    glBegin(GL_POLYGON);
+    glVertex2f(300.0f, 305.0f);
+    glVertex2f(318.0f, 315.0f);
+    glVertex2f(318.0f, 332.0f);
+    glVertex2f(300.0f, 340.0f);
+    glEnd();
+
+    // Front glass
+    if (isDay)
+        glColor3f(0.02f, 0.12f, 0.20f);
+    else
+        glColor3f(0.98f, 0.92f, 0.30f);
+    glBegin(GL_POLYGON);
+    glVertex2f(305.0f, 310.0f);
+    glVertex2f(316.0f, 315.0f);
+    glVertex2f(316.0f, 328.0f);
+    glVertex2f(305.0f, 329.0f);
+    glEnd();
+
+    // Front headlight
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glBegin(GL_QUADS);
+    glVertex2f(298.0f, 300.0f);
+    glVertex2f(305.0f, 300.0f);
+    glVertex2f(305.0f, 305.0f);
+    glVertex2f(298.0f, 305.0f);
+    glEnd();
+
+    //Back light (yellow square at rear)
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glBegin(GL_QUADS);
+    glVertex2f(715.0f, 300.0f);
+    glVertex2f(720.0f, 300.0f);
+    glVertex2f(720.0f, 308.0f);
+    glVertex2f(715.0f, 308.0f);
+    glEnd();
+
+    // Back bumper trim
+    glColor3f(0.1f, 0.1f, 0.1f);
+    glBegin(GL_QUADS);
+    glVertex2f(710.0f, 290.0f);
+    glVertex2f(720.0f, 290.0f);
+    glVertex2f(720.0f, 296.0f);
+    glVertex2f(710.0f, 296.0f);
+    glEnd();
+
+    //Small underbody shadow
+    glColor3f(0.08f, 0.08f, 0.08f);
+    glBegin(GL_QUADS);
+    glVertex2f(310.0f, 284.5f);
+    glVertex2f(700.0f, 284.5f);
+    glVertex2f(700.0f, 292.0f);
+    glVertex2f(310.0f, 292.0f);
+    glEnd();
+
+    glPopMatrix();
+}
+
+void updateTrain(int value)
+{
+    if (!trainPaused)
+    {
+        moveTrain -= trainSpeed;
+        if (moveTrain < -800.0f)
+        {
+            moveTrain = 750.0f;
+        }
+
+        glutPostRedisplay();
+    }
+    glutTimerFunc(16, updateTrain, 0);
+}
+
+
+/// ##############################################################  Flyover  ###############################################################
 void flyOver()
 {
     ///Pillar
@@ -450,6 +633,669 @@ void flyOver()
     glVertex2f(1000,288);
     glVertex2f(0,   288);
     glEnd();
+}
+
+/// ##############################################################  Road  ###############################################################
+void road()
+{
+    if (isDay)
+        glColor3f(.37f, .37f, .37f);
+    else
+        glColor3f(0.15f, 0.15f, 0.15f);
+
+    //Base Gray Color
+    glBegin(GL_QUADS);
+    glVertex2f(0,   0);
+    glVertex2f(1000,0);
+    glVertex2f(1000,40);
+    glVertex2f(0,   40);
+    glEnd();
+
+    //Base white line
+    if (isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.6f, 0.6f, 0.6f);
+
+    glLineWidth(10);
+    glBegin(GL_LINES);
+    glVertex2f(0,   40);
+    glVertex2f(1000,40);
+    glEnd();
+
+    //Main Road
+    glBegin(GL_QUADS);
+
+    if(isDay)
+        glColor3f(0.15f, 0.15f, 0.15f);
+    else
+        glColor3f(0,0,0);
+
+    glVertex2f(0,   160);
+    glVertex2f(1000,160);
+    glVertex2f(1000,40);
+    glVertex2f(0,   40);
+    glEnd();
+
+    //Upper white line of the road
+    if (isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.6f, 0.6f, 0.6f);
+
+    glLineWidth(3);
+    glBegin(GL_LINES);
+    glVertex2f(0,   160);
+    glVertex2f(1000,160);
+    glEnd();
+
+    //Upper gray color
+    if (isDay)
+        glColor3f(0.51f, 0.51f, 0.51f);
+    else
+        glColor3f(0.25f, 0.25f, 0.25f);
+
+    glBegin(GL_QUADS);
+    glVertex2f(0,   160);
+    glVertex2f(1000,160);
+    glVertex2f(1000,173);
+    glVertex2f(0,   173);
+    glEnd();
+
+    //Road dash line
+    if (isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.6f, 0.6f, 0.6f);
+
+    glLineWidth(3);
+    glBegin(GL_LINES);
+    for(int x = 0; x<1000; x+=60)
+    {
+        glVertex2f(x,   102);
+        glVertex2f(x+30,102);
+    }
+    glEnd();
+}
+
+/// ##############################################################  Bus  ###################################################################
+float V_moveBus = 0.0f;
+float V_busSpeed =1.0f;
+float V_savedBusSpeed = 0.0f;
+float V_busTireAngle = 0.0f;
+bool V_busPaused = false;
+
+void bus()
+{
+    glPushMatrix();
+    glTranslatef(V_moveBus, 0, 0);
+
+    // --- BODY & LIGHTS (No Changes here) ---
+    glBegin(GL_QUADS);
+    if (isDay) glColor3f(1.00f, 0.60f, 0.29f);
+    else       glColor3f(0.70f, 0.35f, 0.20f);
+
+    glVertex2f(400, 130); glVertex2f(550, 130);
+    glVertex2f(550, 190); glVertex2f(400, 190);
+
+    glVertex2f(550, 130); glVertex2f(570, 130);
+    glVertex2f(570, 160); glVertex2f(550, 190);
+    glEnd();
+
+    // FRONT Light
+    if(isDay) glColor3f(1,1,1); else glColor3f(1,1,0);
+    glBegin(GL_QUADS);
+    glVertex2f(565, 135); glVertex2f(570, 135);
+    glVertex2f(570, 142); glVertex2f(565, 142);
+    if(!isDay) {
+        glColor3f(1,1,.6);
+        glVertex2f(570, 135); glVertex2f(640, 125);
+        glVertex2f(640, 152); glVertex2f(570, 142);
+    }
+    // REAR LIGHT
+    if(isDay) glColor3f(1,1,1); else glColor3f(1,0,0);
+    glVertex2f(400, 135); glVertex2f(405, 135);
+    glVertex2f(405, 142); glVertex2f(400, 142);
+    glEnd();
+
+    // WINDOWS
+    if (isDay) glColor3f(0.92f, 1.0f, 0.996f); else glColor3f(1,1,.6);
+    glBegin(GL_QUADS);
+    glVertex2f(410, 160); glVertex2f(530, 160);
+    glVertex2f(530, 180); glVertex2f(410, 180);
+    glEnd();
+
+    glColor3f(1.00f, 0.60f, 0.29f);
+    glLineWidth(4);
+    glBegin(GL_LINES);
+    for(int x = 432; x<530; x+=25) {
+        glVertex2f(x,160); glVertex2f(x,180);
+    }
+    glEnd();
+
+    if (isDay) glColor3f(0.92f, 1.0f, 0.996f); else glColor3f(1,1,.6);
+    glBegin(GL_QUADS);
+    glVertex2f(533, 180); glVertex2f(550, 180);
+    glVertex2f(565, 150); glVertex2f(533, 160);
+    glEnd();
+
+    // ==========================================
+    // FIX: WHEELS (Logic corrected)
+    // ==========================================
+
+    // --- REAR TIRE ---
+    glColor3f(0,0,0);
+    halfCircle(425,130,12); // Fender
+
+    glPushMatrix();
+    glTranslatef(425, 130, 0);
+    glRotatef(V_busTireAngle, 0.0, 0.0, 1.0);
+    glTranslatef(-425, -130, 0);
+
+    // 1. Tire Body
+    if (isDay) glColor3f(0.8f, 0.8f, 0.8f);
+    else       glColor3f(0.5f, 0.5f, 0.5f);
+    circle(425,130,11); // <--- MOVED OUTSIDE ELSE
+
+    // 2. Rim / Hubcap
+    if (isDay) glColor3f(1.0f, 1.0f, 1.0f);
+    else       glColor3f(0.7f, 0.7f, 0.7f);
+    circle(425,130,5);  // <--- MOVED OUTSIDE ELSE
+
+    // 3. Spokes
+    glLineWidth(1);
+    glBegin(GL_LINES);
+    glVertex2f(414,130); glVertex2f(436,130);
+    glEnd();
+    glPopMatrix();
+
+    // --- FRONT TIRE ---
+    glColor3f(0,0,0);
+    halfCircle(540,130,12); // Fender
+
+    glPushMatrix();
+    glTranslatef(540, 130, 0);
+    glRotatef(V_busTireAngle, 0.0, 0.0, 1.0);
+    glTranslatef(-540, -130, 0);
+
+    // 1. Tire Body
+    if (isDay) glColor3f(0.8f, 0.8f, 0.8f);
+    else       glColor3f(0.5f, 0.5f, 0.5f);
+    circle(540,130,11); // <--- MOVED OUTSIDE ELSE
+
+    // 2. Rim / Hubcap
+    if (isDay) glColor3f(1.0f, 1.0f, 1.0f);
+    else       glColor3f(0.7f, 0.7f, 0.7f);
+    circle(540,130,5);  // <--- MOVED OUTSIDE ELSE
+
+    // 3. Spokes
+    glLineWidth(1);
+    glBegin(GL_LINES);
+    glVertex2f(529,130); glVertex2f(551,130);
+    glEnd();
+    glPopMatrix();
+
+    glPopMatrix();
+}
+
+void V_updateBus(int value)
+{
+    if(!V_busPaused)
+    {
+        V_moveBus += V_busSpeed+1;
+        if (V_moveBus > 700)
+        {
+            V_moveBus = -550;
+        }
+        V_busTireAngle -= 1.0f;
+        glutPostRedisplay();
+    }
+    glutTimerFunc(2, V_updateBus, 0);
+
+
+}
+/// ######################################################## Cargo Track ########################################################
+float V_moveCargo = 0.0f;
+float V_cargoSpeed =3.0f;
+float V_savedCargoSpeed = 0.0f;
+float V_cargoTireAngle = 0.0f;
+bool V_cargoPaused = false;
+
+void cargoTruck()
+{
+    glPushMatrix();
+    glTranslatef(V_moveCargo, 0, 0);
+
+    /// Head and Body joint
+    if (isDay)
+        glColor3f(0.5f, 0.5f, 0.5f);
+    else
+        glColor3f(0.3f, 0.3f, 0.3f);
+
+    glBegin(GL_QUADS);
+    glVertex2f(760, 73);
+    glVertex2f(730, 73);
+    glVertex2f(730, 110);
+    glVertex2f(760, 83);
+    glEnd();
+
+    ///  ********> Body <********
+    if (isDay)
+        glColor3f(0.51f, 0.86f, 0.92f);
+    else
+        glColor3f(0.22f, 0.46f, 0.55f);
+
+    glBegin(GL_QUADS);
+    glVertex2f(900, 83);
+    glVertex2f(750, 83);
+    glVertex2f(750, 150);
+    glVertex2f(900, 150);
+    glEnd();
+
+
+    /// Head
+    if (isDay)
+        glColor3f(0.30f, 0.82f, 0.87f);
+    else
+        glColor3f(0.15f, 0.42f, 0.48f);
+
+    /// upper quad
+    glBegin(GL_QUADS);
+    glVertex2f(745, 138);
+    glVertex2f(715, 138);
+    glVertex2f(690, 113);
+    glVertex2f(745, 113);
+
+    if (isDay)
+        glColor3f(0.69f, 0.92f, 0.95f);
+    else
+        glColor3f(0.32f, 0.55f, 0.65f);
+
+    glVertex2f(690, 113);
+    glVertex2f(693, 111);
+    glVertex2f(713, 132);
+    glVertex2f(711, 135);
+
+    if (isDay)
+        glColor3f(0.30f, 0.82f, 0.87f);
+    else
+        glColor3f(0.15f, 0.42f, 0.48f);
+
+    /// down quad
+    glVertex2f(745, 75);
+    glVertex2f(690, 70);
+    glVertex2f(690, 113);
+    glVertex2f(745, 113);
+
+    glEnd();
+
+    if (isDay)
+        glColor3f(0.07f, 0.64f, 0.70f);
+    else
+        glColor3f(0.04f, 0.38f, 0.50f);
+
+    glLineWidth(2);
+    glBegin(GL_LINES);
+
+    glVertex2f(740, 133);
+    glVertex2f(717, 133);
+
+    glVertex2f(740, 134);
+    glVertex2f(740, 87);
+
+    glVertex2f(740, 87);
+    glVertex2f(720, 87);
+
+    glVertex2f(720, 87);
+    glVertex2f(710, 80);
+
+    glVertex2f(710, 80);
+    glVertex2f(693, 83);
+
+    glVertex2f(717, 133);
+    glVertex2f(693, 110);
+
+    glVertex2f(693, 110);
+    glVertex2f(693, 83);
+
+    glEnd();
+
+    /// window glass
+    glColor3f(0,0,0);
+    glBegin(GL_POLYGON);
+    glVertex2f(718, 130);
+    glVertex2f(737, 130);
+    glVertex2f(737, 105);
+    glVertex2f(697, 100);
+    glVertex2f(697, 110);
+    glEnd();
+
+    /// inner glass
+    if (isDay)
+        glColor3f(0.92f, 1.0f, 0.996f);
+    else
+        glColor3f(0.60f, 0.75f, 0.78f);
+
+    glBegin(GL_POLYGON);
+    glVertex2f(720, 128);
+    glVertex2f(735, 128);
+    glVertex2f(735, 107);
+    glVertex2f(699, 102);
+    glVertex2f(701, 110);
+    glEnd();
+
+    ///******> door holder
+    if (isDay)
+        glColor3f(0.1f, 0.1f, 0.4f);
+    else
+        glColor3f(0.05f, 0.05f, 0.25f);
+
+    glBegin(GL_QUADS);
+    glVertex2f(735, 102);
+    glVertex2f(735, 98);
+    glVertex2f(727, 98);
+    glVertex2f(727, 102);
+    glEnd();
+
+    /// *********>  REAR Light  <***********
+    if(isDay)
+        glColor3f(1,1,1);
+    else
+        glColor3f(1,0,0);
+
+    glBegin(GL_QUADS);
+    glVertex2f(895, 78);
+    glVertex2f(900, 78);
+    glVertex2f(900, 90);
+    glVertex2f(895, 90);
+    glEnd();
+
+
+    /// *********>  FRONT Light  <***********
+    if (isDay)
+        glColor3f(1.0f, 1.0f, 0.0f);
+    else
+        glColor3f(0.8f, 0.8f, 0.2f);
+
+    glBegin(GL_QUADS);
+    glVertex2f(689, 82);
+    glVertex2f(695, 85);
+    glVertex2f(695, 89);
+    glVertex2f(689, 89);
+
+    if (isDay)
+        glColor3f(1.0f, 0.68f, 0.016f);
+    else
+        glColor3f(0.8f, 0.5f, 0.01f);
+
+    glVertex2f(689, 94);
+    glVertex2f(695, 95);
+    glVertex2f(695, 89);
+    glVertex2f(689, 89);
+
+    glEnd();
+
+    if(!isDay)
+    {
+        glBegin(GL_QUADS);
+        glColor3f(1.0f, 0.68f, 0.016f);
+        glVertex2f(689, 94);
+        glVertex2f(600, 97);
+        glVertex2f(600, 50);
+        glVertex2f(689, 84);
+
+        glEnd();
+    }
+
+    /// Under The Body Black bar
+    if (isDay)
+        glColor3f(0.5f, 0.5f, 0.5f);
+    else
+        glColor3f(0.3f, 0.3f, 0.3f);
+
+    glBegin(GL_QUADS);
+    glVertex2f(900, 73);
+    glVertex2f(730, 73);
+    glVertex2f(725, 83);
+    glVertex2f(900, 83);
+
+    glEnd();
+
+    /// Front Black Bumper
+    if (isDay)
+        glColor3f(0.5f, 0.5f, 0.5f);
+    else
+        glColor3f(0.3f, 0.3f, 0.3f);
+
+    glBegin(GL_POLYGON);
+    glVertex2f(690, 70);
+    glVertex2f(730, 70);
+    glVertex2f(730, 75);
+    glVertex2f(695, 75);
+    glVertex2f(695, 85);
+    glVertex2f(685, 80);
+
+    glEnd();
+
+    /// ********> body design <********
+    if (isDay)
+        glColor3f(0.31f, 0.81f, 0.88f);
+    else
+        glColor3f(0.15f, 0.45f, 0.55f);
+
+    glBegin(GL_QUADS);
+
+    for(int x = 895; x>760; x-=12)
+    {
+        glVertex2f(x, 88);
+        glVertex2f(x-7, 88);
+        glVertex2f(x-7, 145);
+        glVertex2f(x, 145);
+    }
+    glEnd();
+
+    /// Body sky blue 3 quads
+    if (isDay)
+        glColor3f(0.0f, 0.0f, 0.0f);
+    else
+        glColor3f(0.4f, 0.6f, 0.7f);
+
+    glBegin(GL_QUADS);
+    glVertex2f(755, 145);
+    glVertex2f(775, 145);
+    glVertex2f(810, 88);
+    glVertex2f(790, 88);
+
+    glVertex2f(785, 145);
+    glVertex2f(825, 145);
+    glVertex2f(860, 88);
+    glVertex2f(820, 88);
+
+    glVertex2f(835, 145);
+    glVertex2f(860, 145);
+    glVertex2f(895, 88);
+    glVertex2f(870, 88);
+
+    glEnd();
+
+    /// blue design shadow
+    /// side shadow
+    if (isDay)
+        glColor3f(0.05f, 0.64f, 0.69f);
+    else
+        glColor3f(0.02f, 0.3f, 0.35f);
+
+    glLineWidth(2);
+    glBegin(GL_LINES);
+    for(int x = 889; x>750; x-=12)
+    {
+        glVertex2f(x, 88);
+        glVertex2f(x, 145);
+    }
+    glEnd();
+
+    /// body up-down shadow
+    if (isDay)
+        glColor3f(0.05f, 0.64f, 0.69f);
+    else
+        glColor3f(0.02f, 0.28f, 0.32f);
+
+    glLineWidth(1);
+    glBegin(GL_LINES);
+    for(int x = 895; x>760; x-=12)
+    {
+        glVertex2f(x, 88);
+        glVertex2f(x-7, 88);
+
+        glVertex2f(x, 145);
+        glVertex2f(x-7, 145);
+    }
+    glEnd();
+
+    /// REAR TIRE
+    if (isDay)
+        glColor3f(0.26f, 0.26f, 0.26f);
+    else
+        glColor3f(0.15f, 0.15f, 0.15f);
+
+    halfCircle(865,69,14);
+
+    if (isDay)
+        glColor3f(1, 1, 1);
+    else
+        glColor3f(0.8f, 0.8f, 0.8f);
+
+    halfCircle(865,69,12);
+
+    glPushMatrix();
+    glTranslatef(865, 69, 0);
+    glRotatef(V_cargoTireAngle, 0.0, 0.0, 1.0);  // Rotate only the tire
+    glTranslatef(-865, -69, 0);
+
+    if (isDay)
+        glColor3f(0.7f, 0.7f, 0.6f);
+    else
+        glColor3f(0.4f, 0.4f, 0.35f);
+
+    circle(865,69,12);
+
+    if (isDay)
+        glColor3f(0.70f, 0.73f, 0.73f);
+    else
+        glColor3f(0.45f, 0.48f, 0.48f);
+
+    circle(865,69,8);
+
+    if (isDay)
+        glColor3f(0.57f, 0.60f, 0.61f);
+    else
+        glColor3f(0.3f, 0.32f, 0.33f);
+
+    circle(865,69,7);
+
+    if (isDay)
+        glColor3f(0.89f, 0.89f, 0.89f);
+    else
+        glColor3f(0.5f, 0.5f, 0.5f);
+
+    circle(865,69,5);
+
+    if (isDay)
+        glColor3f(0.60f, 0.60f, 0.60f);
+    else
+        glColor3f(0.35f, 0.35f, 0.35f);
+
+    circle(865,69,4);
+
+    glPopMatrix();
+
+    /// FRONT TIRE
+
+    if (isDay)
+        glColor3f(0.26f, 0.26f, 0.26f);
+    else
+        glColor3f(0.15f, 0.15f, 0.15f);
+
+    halfCircle(725,69,14);
+
+    if (isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.8f, 0.8f, 0.8f);
+
+    halfCircle(725,69,12);
+
+    glPushMatrix();
+    glTranslatef(725, 69, 0);
+    glRotatef(V_cargoTireAngle, 0.0, 0.0, 1.0);
+    glTranslatef(-725, -69, 0);
+
+    // Front Tire
+    if (isDay)
+        glColor3f(0.7f, 0.7f, 0.6f);
+    else
+        glColor3f(0.45f, 0.45f, 0.4f);
+
+    circle(725,69,12);
+
+    if (isDay)
+        glColor3f(0.70f, 0.73f, 0.73f);
+    else
+        glColor3f(0.45f, 0.48f, 0.48f);
+
+    circle(725,69,8);
+
+    if (isDay)
+        glColor3f(0.57f, 0.60f, 0.61f);
+    else
+        glColor3f(0.35f, 0.38f, 0.39f);
+
+    circle(725,69,7);
+
+    if (isDay)
+        glColor3f(0.89f, 0.89f, 0.89f);
+    else
+        glColor3f(0.45f, 0.45f, 0.45f);
+
+    circle(725,69,5);
+
+    if (isDay)
+        glColor3f(0.60f, 0.60f, 0.60f);
+    else
+        glColor3f(0.35f, 0.35f, 0.35f);
+
+    circle(725,69,4);
+
+    if (isDay)
+        glColor3f(1,1,1);
+    else
+        glColor3f(.5,.5,.5);
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f(722,70);
+    glVertex2f(728,70);
+    glVertex2f(725,66);
+    glEnd();
+
+    glPopMatrix();
+    glPopMatrix();
+}
+
+void V_updateCargo(int value)
+{
+    if(!V_cargoPaused)
+    {
+        V_moveCargo -= V_cargoSpeed;
+        if (V_moveCargo < -940)
+        {
+            V_moveCargo = 450;
+        }
+        V_cargoTireAngle += 1.0f;
+        glutPostRedisplay();
+    }
+    glutTimerFunc(2, V_updateCargo, 0);
+
+
 }
 
 /// ##############################################################  Road Side Wall  ###############################################################
@@ -536,91 +1382,7 @@ void roadSideWall()
 
 }
 
-/// ##############################################################  Road  ###############################################################
-void road()
-{
-    if (isDay)
-        glColor3f(.37f, .37f, .37f);
-    else
-        glColor3f(0.15f, 0.15f, 0.15f);
-
-    //Base Gray Color
-    glBegin(GL_QUADS);
-    glVertex2f(0,   0);
-    glVertex2f(1000,0);
-    glVertex2f(1000,40);
-    glVertex2f(0,   40);
-    glEnd();
-
-    //Base white line
-    if (isDay)
-        glColor3f(1.0f, 1.0f, 1.0f);
-    else
-        glColor3f(0.6f, 0.6f, 0.6f);
-
-    glLineWidth(10);
-    glBegin(GL_LINES);
-    glVertex2f(0,   40);
-    glVertex2f(1000,40);
-    glEnd();
-
-    //Main Road
-    glBegin(GL_QUADS);
-
-    if(isDay)
-        glColor3f(0.15f, 0.15f, 0.15f);
-    else
-        glColor3f(0,0,0);
-
-    glVertex2f(0,   160);
-    glVertex2f(1000,160);
-    glVertex2f(1000,40);
-    glVertex2f(0,   40);
-    glEnd();
-
-    //Upper white line of the road
-    if (isDay)
-        glColor3f(1.0f, 1.0f, 1.0f);
-    else
-        glColor3f(0.6f, 0.6f, 0.6f);
-
-    glLineWidth(3);
-    glBegin(GL_LINES);
-    glVertex2f(0,   160);
-    glVertex2f(1000,160);
-    glEnd();
-
-    //Upper gray color
-    if (isDay)
-        glColor3f(0.51f, 0.51f, 0.51f);
-    else
-        glColor3f(0.25f, 0.25f, 0.25f);
-
-    glBegin(GL_QUADS);
-    glVertex2f(0,   160);
-    glVertex2f(1000,160);
-    glVertex2f(1000,173);
-    glVertex2f(0,   173);
-    glEnd();
-
-    //Road dash line
-    if (isDay)
-        glColor3f(1.0f, 1.0f, 1.0f);
-    else
-        glColor3f(0.6f, 0.6f, 0.6f);
-
-    glLineWidth(3);
-    glBegin(GL_LINES);
-    for(int x = 0; x<1000; x+=60)
-    {
-        glVertex2f(x,   102);
-        glVertex2f(x+30,102);
-    }
-    glEnd();
-}
-
 /// ####################################################################### Building ###########################################################
-
 void building()
 {
     /// 1st Building
@@ -1586,15 +2348,543 @@ void building()
     glEnd();
 }
 
+float moveCar = 0.0f;
+float carSpeed =1.0f;
+float savedCarSpeed = 0.0f;
+float carTireAngle = 0.0f;
+bool carPaused = false;
+
+void car()
+{
+    glPushMatrix();
+    glTranslatef(moveCar, 0, 0);
+
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3f(1.0f, 0.0f, 0.0f);
+    else
+        glColor3f(0.5f, 0.0f, 0.0f);
+
+    glVertex2i(100,125);
+    glVertex2i(100,140);
+    glVertex2i(105,150);
+    glVertex2i(193,150);
+    glVertex2i(205,145);
+    glVertex2i(205,125);
+    glEnd();
+
+    /// ***> Light <***
+    glBegin(GL_QUADS);
+    if (isDay)
+        glColor3f(1,1,1);
+    else
+        glColor3f(1,1,.7);
+    /// Front light
+    glVertex2i(200,128);
+    glVertex2i(205,128);
+    glVertex2i(205,135);
+    glVertex2i(200,135);
+
+    /// Rear light
+    if (isDay)
+        glColor3f(1,1,1);
+    else
+        glColor3f(1,0,0);
+
+    glVertex2i(100,128);
+    glVertex2i(105,128);
+    glVertex2i(105,135);
+    glVertex2i(100,135);
+
+    /// Yellow light for night
+    if(!isDay)
+    {
+        glColor3f(1,1,.7);
+        glVertex2i(205,128);
+        glVertex2i(260,115);
+        glVertex2i(260,140);
+        glVertex2i(205,135);
+
+    }
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3f(1.0f, 0.0f, 0.0f);
+    else
+        glColor3f(0.5f, 0.0f, 0.0f);
+
+    glVertex2i(110,145);
+    glVertex2i(121,168);
+    glVertex2i(170,168);
+    glVertex2i(190,145);
+
+    glEnd();
+
+
+    glBegin(GL_QUADS);//////////glass///////
+    if (isDay)
+        glColor3f(0.27f, 0.28f, 0.29f);
+    else
+        glColor3f(0.15f, 0.07f, 0.03f);
+    glVertex2i(123,150);
+    glVertex2i(123,162);
+    glVertex2i(145,162);
+    glVertex2i(145,150);
+    glEnd();
+
+
+    glBegin(GL_QUADS);/////////////////
+    if (isDay)
+        glColor3f(0.27f, 0.28f, 0.29f);
+    else
+        glColor3f(1.0f, 1.0f, 0.5f);
+    glVertex2i(125,152);
+    glVertex2i(125,160);
+    glVertex2i(143,160);
+    glVertex2i(143,152);
+    glEnd();
+
+
+    glBegin(GL_QUADS);//////////glass///////
+    if (isDay)
+        glColor3f(0.27f, 0.28f, 0.29f);
+    else
+        glColor3f(0.15f, 0.07f, 0.03f);
+
+    glVertex2i(152,151);
+    glVertex2i(152,162);
+    glVertex2i(168,162);
+    glVertex2i(177,151);
+    glEnd();
+
+
+    glBegin(GL_QUADS);/////////////////
+    if (isDay)
+        glColor3f(0.27f, 0.28f, 0.29f);
+    else
+        glColor3f(1.0f, 1.0f, 0.5f);
+
+    glVertex2i(154,149);
+    glVertex2i(154,160);
+    glVertex2i(166,160);
+    glVertex2i(175,149);
+    glEnd();
 
 
 
 
+    //first car chakka/////////////////////////
+    if (isDay)
+        glColor3f(0.34f, 0.34f, 0.34f);
+    else
+        glColor3f(0.15f, 0.15f, 0.15f);
+
+    halfCircle(125,125,10);
 
 
+    if (isDay)
+        glColor3f(0.0f, 0.0f, 0.0f);
+    else
+        glColor3f(0.0f, 0.0f, 0.0f);
+
+    circle(125,125,9);
+
+    if (isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.5f, 0.5f, 0.5f);
+
+    circle(125,125,3);
+
+    if (isDay)
+        glColor3f(0.34f, 0.34f, 0.34f);
+    else
+        glColor3f(0.15f, 0.15f, 0.15f);
+
+    circle(175,125,10);
 
 
-/// ##############################################################  SAKIB DISPLAY  ###############################################################
+    if (isDay)
+        glColor3f(0.0f, 0.0f, 0.0f);
+    else
+        glColor3f(0.0f, 0.0f, 0.0f);
+
+    circle(175,125,9);
+
+    if (isDay)
+        glColor3f(1.0f, 1.0f, 1.0f);
+    else
+        glColor3f(0.5f, 0.5f, 0.5f);
+
+    circle(175,125,3);
+
+    glPopMatrix();
+}
+void updateCar(int value)
+{
+    if(!carPaused)
+    {
+
+        moveCar += carSpeed+1;
+        if (moveCar > 900)
+        {
+            moveCar = -350;
+        }
+
+        glutPostRedisplay();
+    }
+
+    glutTimerFunc(10, updateCar, 0);
+}
+
+void specialKeys(int key, int x, int y)
+{
+    //Day Mode Metro speed control
+    if(isDay)
+    {
+        switch (key)
+        {
+        case GLUT_KEY_UP:
+            trainSpeed += 0.2f;
+            break;
+        case GLUT_KEY_DOWN:
+            trainSpeed -= 0.2f;
+            if (trainSpeed < 0) trainSpeed = 0;
+            break;
+        }
+    }
+    //Night Mode Metro speed control
+    if(!isDay)
+    {
+        switch (key)
+        {
+        case GLUT_KEY_UP:
+            trainSpeed += 0.2f;
+            break;
+        case GLUT_KEY_DOWN:
+            trainSpeed -= 0.2f;
+            if (trainSpeed < 0) trainSpeed = 0;
+            break;
+        }
+    }
+//Sun Speed
+    if(isDay)
+    {
+        switch (key)
+        {
+        case GLUT_KEY_RIGHT:
+            sunSpeed += 0.2f;
+            break;
+        case GLUT_KEY_LEFT:
+            sunSpeed -= 0.2f;
+            if (sunSpeed < 0) sunSpeed = 0;
+            break;
+        }
+    }
+//Moon Speed
+    if(!isDay)
+    {
+        switch (key)
+        {
+        case GLUT_KEY_RIGHT:
+            moonSpeed += 0.2f;
+            break;
+        case GLUT_KEY_LEFT:
+            moonSpeed -= 0.2f;
+            if (moonSpeed < 0) moonSpeed = 0;
+            break;
+        }
+    }
+    //Cargoo Truck Speed
+     if(!isDay)
+    {
+        switch (key)
+        {
+        case GLUT_KEY_PAGE_UP:
+            V_cargoSpeed += 0.2f;
+            break;
+        case GLUT_KEY_PAGE_DOWN:
+            V_cargoSpeed -= 0.2f;
+            if (V_cargoSpeed < 0) V_cargoSpeed = 0;
+            break;
+        }
+    }
+     if(isDay)
+    {
+        switch (key)
+        {
+        case GLUT_KEY_PAGE_UP:
+            V_cargoSpeed += 0.2f;
+            break;
+        case GLUT_KEY_PAGE_DOWN:
+            V_cargoSpeed -= 0.2f;
+            if (V_cargoSpeed < 0) V_cargoSpeed = 0;
+            break;
+        }
+    }
+
+}
+
+void keyboard(unsigned char key, int x, int y)
+{
+    if (key == 'd' || key == 'D')
+    {
+        isDay = true;
+        glutPostRedisplay();
+    }
+
+    if(key == 'n' || key == 'N')
+    {
+        isDay = false;
+        glutPostRedisplay();
+    }
+
+    if (key == ' ')
+    {
+        /// Cargo Stop and Start
+       V_cargoPaused = !V_cargoPaused;
+
+       if(V_cargoPaused)
+       {
+           V_savedCargoSpeed = V_cargoSpeed;
+           V_cargoSpeed = 0;
+       }
+       else
+       {
+           V_cargoSpeed = V_savedCargoSpeed;
+       }
+
+        /// Car Stop and Start
+        carPaused = !carPaused;
+
+        if(carPaused)
+        {
+            savedCarSpeed = carSpeed;
+            carSpeed = 0;
+        }
+        else
+        {
+            carSpeed = savedCarSpeed;
+        }
+
+        /// Bus Stop and Start
+        V_busPaused = !V_busPaused;
+
+        if(V_busPaused)
+        {
+            V_savedBusSpeed = V_busSpeed;
+            V_busSpeed = 0;
+        }
+        else
+        {
+            V_busSpeed = V_savedBusSpeed;
+        }
+
+        /// Train Stop and Start
+        trainPaused = !trainPaused;
+
+        if (trainPaused)
+        {
+            savedTrainSpeed = trainSpeed;
+            trainSpeed = 0;
+        }
+        else
+        {
+            trainSpeed = savedTrainSpeed;
+        }
+
+        /// Cloud Stop and Start
+        // Cloud 1
+        V_cloudPaused1 = !V_cloudPaused1;
+
+        if (V_cloudPaused1)
+        {
+            V_savedCloudSpeed1 = V_cloudSpeed1;
+            V_cloudSpeed1 = 0;
+        }
+        else
+        {
+            V_cloudSpeed1 = V_savedCloudSpeed1;
+        }
+
+        // Cloud 2
+        V_cloudPaused2 = !V_cloudPaused2;
+
+        if (V_cloudPaused2)
+        {
+            V_savedCloudSpeed2 = V_cloudSpeed2;
+            V_cloudSpeed2 = 0;
+        }
+        else
+        {
+            V_cloudSpeed2 = V_savedCloudSpeed2;
+        }
+
+        // Cloud 3
+        V_cloudPaused3 = !V_cloudPaused3;
+
+        if (V_cloudPaused3)
+        {
+            V_savedCloudSpeed3 = V_cloudSpeed3;
+            V_cloudSpeed3 = 0;
+        }
+        else
+        {
+            V_cloudSpeed3 = V_savedCloudSpeed3;
+        }
+
+        // Cloud 4
+        V_cloudPaused4 = !V_cloudPaused4;
+
+        if (V_cloudPaused4)
+        {
+            V_savedCloudSpeed4 = V_cloudSpeed4;
+            V_cloudSpeed4 = 0;
+        }
+        else
+        {
+            V_cloudSpeed4 = V_savedCloudSpeed4;
+        }
+
+        /// Sun Stop and Start
+        sunPaused = !sunPaused;
+
+        if (sunPaused)
+        {
+            savedSunSpeed = sunSpeed;
+            sunSpeed = 0;
+        }
+        else
+        {
+            sunSpeed = savedSunSpeed;
+        }
+
+        /// Moon Stop and Start
+        moonPaused = !moonPaused;
+
+        if (moonPaused)
+        {
+            savedMoonSpeed = moonSpeed;
+            moonSpeed = 0;
+        }
+        else
+        {
+            moonSpeed = savedMoonSpeed;
+        }
+    }
+
+
+    if(key == 27)
+        exit(0);
+}
+
+void mouse(int button, int state, int x, int y)
+{
+    //Train
+    if(isDay)
+    {
+        if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)   // Pause/resume
+        {
+            trainPaused = !trainPaused;
+            if (trainPaused)
+            {
+                savedTrainSpeed = trainSpeed;
+                trainSpeed = 0;
+            }
+            else
+            {
+                trainSpeed = savedTrainSpeed;
+            }
+        }
+    }
+    if(!isDay)
+    {
+        if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)   // Pause/resume
+        {
+            trainPaused = !trainPaused;
+            if (trainPaused)
+            {
+                savedTrainSpeed = trainSpeed;
+                trainSpeed = 0;
+            }
+            else
+            {
+                trainSpeed = savedTrainSpeed;
+            }
+        }
+    }
+    //Sun
+    if(isDay)
+    {
+        if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+        {
+            sunPaused = !sunPaused;
+            if (sunPaused)
+            {
+                savedSunSpeed = sunSpeed;
+                sunSpeed = 0;
+            }
+            else
+            {
+                sunSpeed = savedSunSpeed;
+            }
+        }
+    }
+    if(!isDay)
+    {
+        if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)   // Pause/resume
+        {
+            moonPaused = !moonPaused;
+            if (moonPaused)
+            {
+                savedMoonSpeed = moonSpeed;
+                moonSpeed = 0;
+            }
+            else
+            {
+                moonSpeed = savedMoonSpeed;
+            }
+        }
+    }
+    //Cargoo Truck
+    if(!isDay)
+    {
+        if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN)   // Pause/resume
+        {
+            V_cargoPaused = !V_cargoPaused;
+
+            if (V_cargoPaused)
+            {
+                V_savedCargoSpeed = V_cargoSpeed;
+                V_cargoSpeed = 0;
+            }
+            else
+            {
+                V_cargoSpeed = V_savedCargoSpeed;
+            }
+        }
+    }
+    if(isDay)
+    {
+        if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN)   // Pause/resume
+        {
+            V_cargoPaused = !V_cargoPaused;
+
+            if (V_cargoPaused)
+            {
+                V_savedCargoSpeed = V_cargoSpeed;
+                V_cargoSpeed = 0;
+            }
+            else
+            {
+                V_cargoSpeed = V_savedCargoSpeed;
+            }
+        }
+    }
+}
+
 void SAKIB()
 {
     glDisable(GL_LIGHTING);
@@ -1644,41 +2934,64 @@ void SAKIB()
     V_cloud2();
     V_cloud3();
     V_cloud4();
-
-    garden();
-    flyOver();
-    roadSideWall();
-    road();
-
-
     building();
-
+    train();
+    flyOver();
+    garden();
+    road();
+    roadSideWall();
+    bus();
+    car();
+    cargoTruck();
 }
 
+/// =======================================================$$$$$$$$$$$$$$$$$$$$$$$$===================================================================
 
-/// ##############################################################  CONTROL  ###############################################################
+
+
+
+
+
+
 
 void selectKeyboard(unsigned char key, int x, int y)
 {
-    if (key == 'd' || key == 'D')
-    {
-        isDay = true;
-        glutPostRedisplay();
-    }
 
-    if(key == 'n' || key == 'N')
+    if (scenarioSAKIB)
     {
-        isDay = false;
-        glutPostRedisplay();
+        keyboard(key, x, y);
     }
 }
 
+
+
+void selectSpecialKeys(int key, int x, int y)
+{
+    // --- Scene 1: SAKIB ---
+    if (scenarioSAKIB)
+    {
+        specialKeys(key, x, y);
+    }
+
+}
+
+void selectMouse(int button, int state, int x, int y)
+{
+    if (scenarioSAKIB)
+    {
+        mouse(button, state, x, y);
+    }
+
+}
+
+/// ##############################################################  Display  ###############################################################
 void display()
 {
     if(scenarioSAKIB) SAKIB();
 
     glutSwapBuffers();
 }
+
 int main(int argc, char** argv)
 {
 
@@ -1687,7 +3000,13 @@ int main(int argc, char** argv)
     // 2. MAIN CITY CONTROLS
     // ==========================================
     cout<<"********** >>> Main City Specifics <<< **********"<<endl;
-    cout<<"Press D / N    : (Day/Night)"<<endl;
+    cout<<"Press key_up / key_down    : Train speed (Day/Night)"<<endl;
+    cout<<"Press key_left / key_right : Sun speed (Day)/Moon speed (Night)"<<endl;
+    cout<<"Press Page Up / Page Down  : Cargo Truck speed (Day/Night)"<<endl<<endl;
+    cout<<"Mouse Left Click           : Stop/Start Train (Day) / Moon (Night)"<<endl;
+    cout<<"Mouse Right Click          : Stop/Start Sun/Moon"<<endl;
+    cout<<"Mouse Middle Click          : Stop/Start Truck (Day/Night)"<<endl;
+    cout<<"Press SPACE                : Stop Everything"<<endl;
 
     // --- Window Initialization ---
     glutInit(&argc, argv);
@@ -1741,16 +3060,18 @@ int main(int argc, char** argv)
     glutTimerFunc(16, V_updateCloud4, 0);
     glutTimerFunc(2, updateSun, 0);
     glutTimerFunc(16, updateMoon, 0);
-
+    glutTimerFunc(16, updateTrain, 0);
+    glutTimerFunc(2, V_updateBus, 0);
+    glutTimerFunc(2, updateCar, 0);
+    glutTimerFunc(16, V_updateCargo, 0);
 
 
     // Input Callbacks
     glutKeyboardFunc(selectKeyboard);
-
-
+    glutSpecialFunc(selectSpecialKeys);
+    glutMouseFunc(selectMouse);
 
     glutMainLoop();
 
     return 0;
 }
-
