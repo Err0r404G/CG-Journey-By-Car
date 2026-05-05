@@ -956,3 +956,9 @@
 
 1738705850 >
 
+1777933967 source:c:\users\sakib sadman\desktop\computer graphics\cg-journey-by-car\main.cpp
+	<GL/gl.h>
+	<GL/glut.h>
+	<iostream>
+	<math.h>
+

@@ -1381,79 +1381,80 @@ void roadSideWall()
     glEnd();
 
 }
+/// DDA FUNCTION ////////////////////////////////////////
+void drawLineDDA(float x1, float y1, float x2, float y2) {
+    float dx = x2 - x1;
+    float dy = y2 - y1;
+    float steps = fmax(fabs(dx), fabs(dy));
+
+    float x_inc = dx / steps;
+    float y_inc = dy / steps;
+
+    float x = x1;
+    float y = y1;
+
+    glBegin(GL_POINTS);
+    for (int i = 0; i <= steps; i++) {
+        glVertex2i(round(x), round(y));
+        x += x_inc;
+        y += y_inc;
+    }
+    glEnd();
+}
+
+// Helper to draw a rectangle using 4 DDA lines
+void drawRectDDA(float x1, float y1, float x2, float y2) {
+    drawLineDDA(x1, y1, x2, y1); // Bottom
+    drawLineDDA(x2, y1, x2, y2); // Right
+    drawLineDDA(x2, y2, x1, y2); // Top
+    drawLineDDA(x1, y2, x1, y1); // Left
+}
+
+// Fills a rectangle by drawing many horizontal DDA lines
+void fillDDA(float x1, float y1, float x2, float y2) {
+    for (float i = y1; i <= y2; i++) {
+        drawLineDDA(x1, i, x2, i);
+    }
+}
+
 
 /// ####################################################################### Building ###########################################################
 void building()
 {
     /// 1st Building
-    if(isDay)
-        glColor3f(0.92f, 0.92f, 0.92f);
-    else
-        glColor3f(0.55f, 0.55f, 0.55f);
+    if (isDay) glColor3f(0.92f, 0.92f, 0.92f);
+    else glColor3f(0.55f, 0.55f, 0.55f);
+    fillDDA(10, 200, 100, 525);
 
-    // body
-    glBegin(GL_QUADS);
-    glVertex2f(10,  200);
-    glVertex2f(100, 200);
-    glVertex2f(100, 525);
-    glVertex2f(10,  525);
+    // --- Top Cap ---
+    if (isDay) glColor3f(1.0f, 1.0f, 1.0f);
+    else glColor3f(0.6f, 0.6f, 0.6f);
+    fillDDA(6, 525, 104, 535);
 
-    if(isDay)
-        glColor3f(1.0f, 1.0f, 1.0f);
-    else
-        glColor3f(0.6f, 0.6f, 0.6f);
+    // --- Windows ---
+    for (int x = 18; x < 80; x += 27) {
+        for (int y = 500; y > 200; y -= 60) {
 
-    // Top
-    glVertex2f(6,   525);
-    glVertex2f(104, 525);
-    glVertex2f(104, 535);
-    glVertex2f(6,   535);
-    glEnd();
+            // Window Background (Border)
+            if (isDay) glColor3f(1.0f, 1.0f, 1.0f);
+            else glColor3f(0.15f, 0.07f, 0.03f);
+            fillDDA(x - 2, y - 20, x + 22, y + 7);
 
-    // window
-    glBegin(GL_QUADS);
-    for(int x = 18; x<80; x+=27 )
-    {
-        for(int y = 500; y>200; y-=60)
-        {
-            if(isDay)
-                glColor3f(1,1,1);
-            else
-                glColor3f(0.15f, 0.07f, 0.03f);
-
-            glVertex2f(x-2,  y+7);
-            glVertex2f(x+22, y+7);
-            glVertex2f(x+22, y-20);
-            glVertex2f(x-2,  y-20);
-
-            if(isDay)
-                glColor3f(0.52f, 0.78f, 0.96f);
-            else
-                glColor3f(1.0f, 1.0f, 0.5f);
-
-            glVertex2f(x,  y+5);
-            glVertex2f(x+20, y+5);
-            glVertex2f(x+20, y-20);
-            glVertex2f(x,  y-20);
+            // Window Glass (Inner)
+            if (isDay) glColor3f(0.52f, 0.78f, 0.96f);
+            else glColor3f(1.0f, 1.0f, 0.5f);
+            fillDDA(x, y - 20, x + 20, y + 5);
         }
     }
 
-    // Window white border
-    if(isDay)
-        glColor3f(1.0f, 1.0f, 1.0f);
-    else
-        glColor3f(0.6f, 0.6f, 0.6f);
-
-    glBegin(GL_QUADS);
-    for(int y = 480; y > 200; y -= 60 )
-    {
-        glVertex2f(5,   y   );
-        glVertex2f(105, y   );
-        glVertex2f(105, y-15);
-        glVertex2f(5,   y-15);
+    // --- Horizontal White Decorative Strips ---
+    if (isDay) glColor3f(1.0f, 1.0f, 1.0f);
+    else glColor3f(0.6f, 0.6f, 0.6f);
+    for (int y = 480; y > 200; y -= 60) {
+        fillDDA(5, y - 15, 105, y);
     }
-    glEnd();
 
+    glFlush();
     /// $$$$$$$$$$$$$$$$$$ 2nd Building $$$$$$$$$$$$$$
     glBegin(GL_QUADS);
 
@@ -2848,7 +2849,7 @@ void mouse(int button, int state, int x, int y)
             }
         }
     }
-    //Cargoo Truck
+    ///Cargoo Truck
     if(!isDay)
     {
         if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN)   // Pause/resume
