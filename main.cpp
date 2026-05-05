@@ -2072,7 +2072,7 @@ void building()
     else
         glColor3f(0.15f, 0.07f, 0.03f);
 
-    for(int y = 373; y>200; y-=30)
+    for(int y = 370; y>200; y-=30)
     {
         glVertex2f(647, y);
         glVertex2f(713, y);
